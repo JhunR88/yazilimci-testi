@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hangi Yazılımcı Tipisin?</title>
+  <style>
+    /* Genel ayarlar */
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #ffffff;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+}
+
+/* Üç ekranın ortak kutusu */
+#start-screen,
+#quiz-screen,
+#result-screen {
+  width: 100%;
+  max-width: 420px;
+  padding: 28px 22px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+h1 {
+  margin: 0 0 24px;
+  font-size: 28px;
+  line-height: 1.25;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: 30px;
+}
+
+#question {
+  margin: 0 0 22px;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+#result-text {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* Butonlar */
+button {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 12px;
+  font-size: 17px;
+  font-family: inherit;
+  color: #2b2b2b;
+  background: #ffffff;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.15s;
+}
+
+button:hover {
+  background: #f1e9ff;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+#start-btn {
+  margin-bottom: 0;
+  font-weight: 700;
+  color: #ffffff;
+  background: #ff6b6b;
+}
+
+#start-btn:hover {
+  background: #ff5252;
+}
+
+#share-btn {
+  font-weight: 700;
+  color: #ffffff;
+  background: #ff6b6b;
+  margin-top: 22px;
+}
+
+#share-btn:hover {
+  background: #ff5252;
+}
+
+#restart-btn {
+  margin-bottom: 0;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+#restart-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+  </style>
+</head>
+<body>
+
+  <div id="start-screen">
+    <h1>Hangi Yazılımcı Tipisin?</h1>
+    <button id="start-btn">Teste Başla</button>
+  </div>
+
+  <div id="quiz-screen" hidden>
+    <p id="question"></p>
+    <div id="answers"></div>
+  </div>
+
+  <div id="result-screen" hidden>
+  <h2 id="result-title"></h2>
+  <p id="result-text"></p>
+  <button id="share-btn" class="main-btn">Sonucumu Paylaş 📲</button>
+  <button id="restart-btn" class="second-btn">Tekrar Çöz</button>
+</div>
+
+  <script>
+    // 1) Sonuç tipleri
+const results = {
+  bug: {
+    title: "🐞 Bug Avcısı",
+    text: "Hata görünce gözlerin parlıyor. Kod çalışmıyorsa bunu kişisel meydan okuma sayarsın ve çözene kadar bırakmazsın."
+  },
+  mimar: {
+    title: "🏗️ Kod Mimarı",
+    text: "Kod yazmadan önce planı çizersin. Temiz klasör yapısı, düzenli isimlendirme senin için vazgeçilmez."
+  },
+  kopya: {
+    title: "📋 Stack Overflow Ustası",
+    text: "Her sorunun cevabı internette bir yerde var ve sen onu en hızlı bulan kişisin. Pratik çözümün kralısın."
+  },
+  gece: {
+    title: "🌙 Gece Kodlayıcısı",
+    text: "Dünya uyurken senin en verimli saatlerin başlıyor. Kahve, karanlık tema ve akış hali."
+  }
+};
+
+// 2) Sorular: her cevap bir tipe puan verir
+const questions = [
+  {
+    text: "Kodun hata verdi. İlk tepkin ne?",
+    answers: [
+      { text: "Hatayı satır satır incelerim", type: "bug" },
+      { text: "Baştan planlayıp yeniden yazarım", type: "mimar" },
+      { text: "Hata mesajını Google'a yapıştırırım", type: "kopya" },
+      { text: "Bir kahve alıp gece devam ederim", type: "gece" }
+    ]
+  },
+  {
+    text: "Yeni projeye nasıl başlarsın?",
+    answers: [
+      { text: "Önce klasör yapısını kurarım", type: "mimar" },
+      { text: "Hemen yazmaya başlarım, hatalar yolda çıkar", type: "bug" },
+      { text: "Benzer bir örnek bulup üstüne eklerim", type: "kopya" },
+      { text: "Herkes uyuduktan sonra", type: "gece" }
+    ]
+  },
+  {
+    text: "En sevdiğin an hangisi?",
+    answers: [
+      { text: "Zor bir hatayı çözdüğüm an", type: "bug" },
+      { text: "Kodum tertemiz göründüğünde", type: "mimar" },
+      { text: "Aradığım cevabı ilk denemede bulduğumda", type: "kopya" },
+      { text: "Saat 03:00'te her şey çalıştığında", type: "gece" }
+    ]
+  }
+];
+
+// 3) Durum: kaçıncı sorudayız, hangi tipin kaç puanı var
+let current = 0;
+const scores = { bug: 0, mimar: 0, kopya: 0, gece: 0 };
+
+// 4) Ekranları ve elemanları seç
+const startScreen = document.getElementById("start-screen");
+const quizScreen = document.getElementById("quiz-screen");
+const resultScreen = document.getElementById("result-screen");
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+
+// 5) Testi başlat
+function startQuiz() {
+  current = 0;
+  for (const type in scores) {
+    scores[type] = 0;
+  }
+  startScreen.hidden = true;
+  quizScreen.hidden = false;
+  showQuestion();
+}
+
+// 6) Soruyu ve cevap butonlarını ekrana bas
+function showQuestion() {
+  const q = questions[current];
+  questionEl.textContent = q.text;
+  answersEl.innerHTML = "";
+
+  q.answers.forEach(function (answer) {
+    const btn = document.createElement("button");
+    btn.textContent = answer.text;
+    btn.addEventListener("click", function () {
+      chooseAnswer(answer.type);
+    });
+    answersEl.appendChild(btn);
+  });
+}
+
+// 7) Cevap seçilince puan ver, sonraki soruya geç
+function chooseAnswer(type) {
+  scores[type]++;
+  current++;
+  if (current < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+// 8) En yüksek puanlı tipi bul ve göster
+function showResult() {
+  let winner = "bug";
+  for (const type in scores) {
+    if (scores[type] > scores[winner]) {
+      winner = type;
+    }
+  }
+  quizScreen.hidden = true;
+  resultScreen.hidden = false;
+  document.getElementById("result-title").textContent = results[winner].title;
+  document.getElementById("result-text").textContent = results[winner].text;
+}
+
+// 9) Butona tıklayınca testi başlat
+document.getElementById("start-btn").addEventListener("click", startQuiz);
+
+// 10) Tekrar çöz
+document.getElementById("restart-btn").addEventListener("click", function () {
+  resultScreen.hidden = true;
+  startScreen.hidden = false;
+});
+
+// 11) Sonucu paylaş
+document.getElementById("share-btn").addEventListener("click", async function () {
+  const title = document.getElementById("result-title").textContent;
+  const shareData = {
+    title: "Hangi Yazılımcı Tipisin?",
+    text: "Ben " + title + " çıktım! Sen hangisisin?",
+    url: window.location.href
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+    } catch (err) {
+      // Kullanıcı paylaşmaktan vazgeçti, sorun yok
+    }
+  } else {
+    try {
+      await navigator.clipboard.writeText(shareData.text + " " + shareData.url);
+      alert("Metin ve link kopyalandı! Story'ne yapıştırabilirsin.");
+    } catch (err) {
+      alert("Linki elle kopyalayıp paylaşabilirsin.");
+    }
+  }
+});
+
+  </script>
+
+</body>
+</html>
