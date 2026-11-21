@@ -3,291 +3,505 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hangi Yazılımcı Tipisin?</title>
+  <title>Hangi Yazılımcı Tipisin? | Jayhun Rahim</title>
   <style>
-    /* Genel ayarlar */
-* {
-  box-sizing: border-box;
-}
+    * { box-sizing: border-box; }
 
-[hidden] {
-  display: none !important;
-}
+    [hidden] { display: none !important; }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  color: #ffffff;
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: #ffffff;
+      background: #0f0c29;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      overflow-x: hidden;
+    }
 
-/* Üç ekranın ortak kutusu */
-#start-screen,
-#quiz-screen,
-#result-screen {
-  width: 100%;
-  max-width: 420px;
-  padding: 28px 22px;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-}
+    /* Arka plandaki parlak lekeler */
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.45;
+      z-index: -1;
+    }
+    body::before { background: #7f5af0; top: -80px; left: -80px; }
+    body::after  { background: #ff6b6b; bottom: -80px; right: -80px; }
 
-h1 {
-  margin: 0 0 24px;
-  font-size: 28px;
-  line-height: 1.25;
-}
+    .app { width: 100%; max-width: 440px; }
 
-h2 {
-  margin: 0 0 14px;
-  font-size: 30px;
-}
+    .card {
+      padding: 30px 24px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      animation: fadeUp 0.5s ease;
+    }
 
-#question {
-  margin: 0 0 22px;
-  font-size: 21px;
-  font-weight: 600;
-  line-height: 1.4;
-}
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-#result-text {
-  margin: 0;
-  font-size: 17px;
-  line-height: 1.6;
-}
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      margin-bottom: 18px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      background: rgba(127, 90, 240, 0.35);
+      border-radius: 999px;
+    }
 
-/* Butonlar */
-button {
-  width: 100%;
-  padding: 16px;
-  margin-bottom: 12px;
-  font-size: 17px;
-  font-family: inherit;
-  color: #2b2b2b;
-  background: #ffffff;
-  border: none;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: transform 0.15s, background 0.15s;
-}
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 8vw, 36px);
+      line-height: 1.2;
+      background: linear-gradient(90deg, #ffffff, #c9b8ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-button:hover {
-  background: #f1e9ff;
-}
+    .sub {
+      margin: 0 0 26px;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #d7d3ee;
+    }
 
-button:active {
-  transform: scale(0.97);
-}
+    .hero-emoji { font-size: 64px; margin-bottom: 10px; }
 
-#start-btn {
-  margin-bottom: 0;
-  font-weight: 700;
-  color: #ffffff;
-  background: #ff6b6b;
-}
+    /* Butonlar */
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 17px;
+      font-family: inherit;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+    }
+    button:active { transform: scale(0.97); }
 
-#start-btn:hover {
-  background: #ff5252;
-}
+    #start-btn, #share-btn {
+      font-weight: 700;
+      color: #ffffff;
+      background: linear-gradient(90deg, #ff6b6b, #ff8e53);
+      box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+    }
 
-#share-btn {
-  font-weight: 700;
-  color: #ffffff;
-  background: #ff6b6b;
-  margin-top: 22px;
-}
+    #restart-btn {
+      margin-top: 12px;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.15);
+    }
+    #restart-btn:hover { background: rgba(255, 255, 255, 0.25); }
 
-#share-btn:hover {
-  background: #ff5252;
-}
+    /* Soru ekranı */
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #d7d3ee;
+    }
 
-#restart-btn {
-  margin-bottom: 0;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.2);
-}
+    .progress {
+      height: 8px;
+      margin-bottom: 26px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+    }
 
-#restart-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7f5af0, #ff6b6b);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    #question {
+      margin: 0 0 22px;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .answer-btn {
+      display: block;
+      margin-bottom: 12px;
+      text-align: left;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .answer-btn:hover {
+      background: rgba(127, 90, 240, 0.4);
+      border-color: #a78bfa;
+    }
+
+    /* Sonuç ekranı */
+    #result-emoji { font-size: 76px; margin-bottom: 4px; }
+
+    .label {
+      margin: 0 0 4px;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #c9b8ff;
+    }
+
+    h2 { margin: 0 0 14px; font-size: 30px; }
+
+    #result-text {
+      margin: 0 0 24px;
+      font-size: 17px;
+      line-height: 1.6;
+      color: #ece9fb;
+    }
+
+    #result-bars { margin-bottom: 24px; text-align: left; }
+
+    .bar-row { margin-bottom: 12px; }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #d7d3ee;
+    }
+
+    .bar-track {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7f5af0, #ff6b6b);
+      border-radius: 999px;
+      transition: width 0.8s ease;
+    }
+
+    /* İmza */
+    .brand {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #b9b4d6;
+    }
+    .brand strong { color: #ffffff; }
   </style>
 </head>
 <body>
 
-  <div id="start-screen">
-    <h1>Hangi Yazılımcı Tipisin?</h1>
-    <button id="start-btn">Teste Başla</button>
-  </div>
+  <div class="app">
 
-  <div id="quiz-screen" hidden>
-    <p id="question"></p>
-    <div id="answers"></div>
-  </div>
+    <div id="start-screen" class="card">
+      <div class="hero-emoji">💻</div>
+      <div class="badge">🧠 KİŞİLİK TESTİ</div>
+      <h1>Hangi Yazılımcı Tipisin?</h1>
+      <p class="sub">10 soruda kod kişiliğini keşfet. Bir dakikadan kısa sürer, sonucu arkadaşlarınla karşılaştır!</p>
+      <button id="start-btn">Teste Başla 🚀</button>
+    </div>
 
-  <div id="result-screen" hidden>
-  <h2 id="result-title"></h2>
-  <p id="result-text"></p>
-  <button id="share-btn" class="main-btn">Sonucumu Paylaş 📲</button>
-  <button id="restart-btn" class="second-btn">Tekrar Çöz</button>
-</div>
+    <div id="quiz-screen" class="card" hidden>
+      <div class="progress-info">
+        <span id="progress-text"></span>
+        <span>Jayhun Rahim</span>
+      </div>
+      <div class="progress"><div id="progress-bar"></div></div>
+      <p id="question"></p>
+      <div id="answers"></div>
+    </div>
+
+    <div id="result-screen" class="card" hidden>
+      <div id="result-emoji"></div>
+      <p class="label">Senin tipin</p>
+      <h2 id="result-title"></h2>
+      <p id="result-text"></p>
+      <div id="result-bars"></div>
+      <button id="share-btn">Sonucumu Paylaş 📲</button>
+      <button id="restart-btn">Tekrar Çöz</button>
+    </div>
+
+    <div class="brand">FROM: <strong>Jayhun Rahim</strong> ✨</div>
+
+  </div>
 
   <script>
+    // İmza ismi: paylaşım metninde kullanılır
+    const AUTHOR = "Jayhun Rahim";
+
     // 1) Sonuç tipleri
-const results = {
-  bug: {
-    title: "🐞 Bug Avcısı",
-    text: "Hata görünce gözlerin parlıyor. Kod çalışmıyorsa bunu kişisel meydan okuma sayarsın ve çözene kadar bırakmazsın."
-  },
-  mimar: {
-    title: "🏗️ Kod Mimarı",
-    text: "Kod yazmadan önce planı çizersin. Temiz klasör yapısı, düzenli isimlendirme senin için vazgeçilmez."
-  },
-  kopya: {
-    title: "📋 Stack Overflow Ustası",
-    text: "Her sorunun cevabı internette bir yerde var ve sen onu en hızlı bulan kişisin. Pratik çözümün kralısın."
-  },
-  gece: {
-    title: "🌙 Gece Kodlayıcısı",
-    text: "Dünya uyurken senin en verimli saatlerin başlıyor. Kahve, karanlık tema ve akış hali."
-  }
-};
+    const results = {
+      bug: {
+        emoji: "🐞",
+        title: "Bug Avcısı",
+        text: "Hata görünce gözlerin parlıyor. Kod çalışmıyorsa bunu kişisel meydan okuma sayarsın ve çözene kadar bırakmazsın. Ekibin en güvendiği kişi sensin."
+      },
+      mimar: {
+        emoji: "🏗️",
+        title: "Kod Mimarı",
+        text: "Kod yazmadan önce planı çizersin. Temiz klasör yapısı, düzenli isimlendirme ve okunabilir kod senin için vazgeçilmez. Projeler senin elinde yıllarca ayakta kalır."
+      },
+      kopya: {
+        emoji: "📋",
+        title: "Stack Overflow Ustası",
+        text: "Her sorunun cevabı internette bir yerde var ve sen onu en hızlı bulan kişisin. Tekerleği yeniden icat etmezsin, pratik çözümün kralısın."
+      },
+      gece: {
+        emoji: "🌙",
+        title: "Gece Kodlayıcısı",
+        text: "Dünya uyurken senin en verimli saatlerin başlıyor. Kahve, karanlık tema ve akış hali. En iyi fikirlerin gece yarısından sonra geliyor."
+      }
+    };
 
-// 2) Sorular: her cevap bir tipe puan verir
-const questions = [
-  {
-    text: "Kodun hata verdi. İlk tepkin ne?",
-    answers: [
-      { text: "Hatayı satır satır incelerim", type: "bug" },
-      { text: "Baştan planlayıp yeniden yazarım", type: "mimar" },
-      { text: "Hata mesajını Google'a yapıştırırım", type: "kopya" },
-      { text: "Bir kahve alıp gece devam ederim", type: "gece" }
-    ]
-  },
-  {
-    text: "Yeni projeye nasıl başlarsın?",
-    answers: [
-      { text: "Önce klasör yapısını kurarım", type: "mimar" },
-      { text: "Hemen yazmaya başlarım, hatalar yolda çıkar", type: "bug" },
-      { text: "Benzer bir örnek bulup üstüne eklerim", type: "kopya" },
-      { text: "Herkes uyuduktan sonra", type: "gece" }
-    ]
-  },
-  {
-    text: "En sevdiğin an hangisi?",
-    answers: [
-      { text: "Zor bir hatayı çözdüğüm an", type: "bug" },
-      { text: "Kodum tertemiz göründüğünde", type: "mimar" },
-      { text: "Aradığım cevabı ilk denemede bulduğumda", type: "kopya" },
-      { text: "Saat 03:00'te her şey çalıştığında", type: "gece" }
-    ]
-  }
-];
+    // 2) Sorular: her cevap bir tipe puan verir
+    const questions = [
+      {
+        text: "Kodun hata verdi. İlk tepkin ne?",
+        answers: [
+          { text: "Hatayı satır satır incelerim 🔍", type: "bug" },
+          { text: "Durur, planı baştan gözden geçiririm 📐", type: "mimar" },
+          { text: "Hata mesajını Google'a yapıştırırım 🌐", type: "kopya" },
+          { text: "Bir kahve alıp gece devam ederim ☕", type: "gece" }
+        ]
+      },
+      {
+        text: "Yeni bir projeye nasıl başlarsın?",
+        answers: [
+          { text: "Önce klasör yapısını ve planı kurarım 🗂️", type: "mimar" },
+          { text: "Hemen yazarım, hatalar yolda çıkar 💥", type: "bug" },
+          { text: "Benzer bir örnek bulup üstüne eklerim 🧩", type: "kopya" },
+          { text: "Herkes uyuduktan sonra başlarım 🌃", type: "gece" }
+        ]
+      },
+      {
+        text: "En sevdiğin an hangisi?",
+        answers: [
+          { text: "Aradığım cevabı ilk denemede bulduğumda ⚡", type: "kopya" },
+          { text: "Zor bir hatayı çözdüğüm an 🏆", type: "bug" },
+          { text: "Kodum tertemiz göründüğünde ✨", type: "mimar" },
+          { text: "Saat 03:00'te her şey çalıştığında 🎉", type: "gece" }
+        ]
+      },
+      {
+        text: "İdeal çalışma saatin hangisi?",
+        answers: [
+          { text: "Sabah erken, kafam tazeyken 🌅", type: "mimar" },
+          { text: "Fark etmez, hata nerede ise orada 🎯", type: "bug" },
+          { text: "Öğleden sonra, internet hızlıyken 📶", type: "kopya" },
+          { text: "Gece yarısından sonra 🌙", type: "gece" }
+        ]
+      },
+      {
+        text: "Kod yorumları (comment) konusunda tavrın?",
+        answers: [
+          { text: "Sadece garip görünen yerlere yazarım 🤔", type: "bug" },
+          { text: "Her fonksiyonu belgelerim 📚", type: "mimar" },
+          { text: "Kopyaladığım yerde zaten yorum var 😅", type: "kopya" },
+          { text: "Sabah kendime \"bunu neden yazdım?\" notu bırakırım 😴", type: "gece" }
+        ]
+      },
+      {
+        text: "Arkadaşın \"şu koda bir bakar mısın?\" dedi. Ne yaparsın?",
+        answers: [
+          { text: "\"Şu kütüphane bunu zaten yapıyor\" derim 📦", type: "kopya" },
+          { text: "Hemen hatayı ararım 🕵️", type: "bug" },
+          { text: "Önce yapısını inceler, düzenleme öneririm 🧱", type: "mimar" },
+          { text: "\"Akşam bakarım\" derim, gece bakarım 🌌", type: "gece" }
+        ]
+      },
+      {
+        text: "Klavyenin yanında vazgeçilmezin hangisi?",
+        answers: [
+          { text: "Defter ve diyagramlar 📝", type: "mimar" },
+          { text: "Açık 15 tarayıcı sekmesi 🗂️", type: "kopya" },
+          { text: "Kahve ve kulaklık 🎧", type: "gece" },
+          { text: "Debugger ve console.log 🖥️", type: "bug" }
+        ]
+      },
+      {
+        text: "Editör temanı nasıl seçersin?",
+        answers: [
+          { text: "Karanlık tema, tabii ki 🖤", type: "gece" },
+          { text: "Varsayılan kalsın, kurcalamam 🤷", type: "kopya" },
+          { text: "Fark etmez, hata görünsün yeter 👀", type: "bug" },
+          { text: "Renkleri, fontu, eklentileri tek tek ayarlarım 🎨", type: "mimar" }
+        ]
+      },
+      {
+        text: "Teslim tarihi yaklaşıyor. Ne yaparsın?",
+        answers: [
+          { text: "Hazır çözümlerle hızlanırım 🏃", type: "kopya" },
+          { text: "Kalan hataları tek tek avlarım 🎯", type: "bug" },
+          { text: "Gece boyu devam ederim, sabaha biter 🔥", type: "gece" },
+          { text: "Planı önceliklendirip düzenlerim 📋", type: "mimar" }
+        ]
+      },
+      {
+        text: "Kendini hangi cümleyle tanımlarsın?",
+        answers: [
+          { text: "\"En iyi fikirlerim gece gelir.\" 💡", type: "gece" },
+          { text: "\"Tekerleği yeniden icat etmem.\" 🛞", type: "kopya" },
+          { text: "\"Çözülmemiş hata bırakmam.\" 🐞", type: "bug" },
+          { text: "\"Önce tasarla, sonra yaz.\" 🏗️", type: "mimar" }
+        ]
+      }
+    ];
 
-// 3) Durum: kaçıncı sorudayız, hangi tipin kaç puanı var
-let current = 0;
-const scores = { bug: 0, mimar: 0, kopya: 0, gece: 0 };
+    // 3) Durum
+    let current = 0;
+    const scores = { bug: 0, mimar: 0, kopya: 0, gece: 0 };
 
-// 4) Ekranları ve elemanları seç
-const startScreen = document.getElementById("start-screen");
-const quizScreen = document.getElementById("quiz-screen");
-const resultScreen = document.getElementById("result-screen");
-const questionEl = document.getElementById("question");
-const answersEl = document.getElementById("answers");
+    // 4) Elemanları seç
+    const startScreen = document.getElementById("start-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const progressText = document.getElementById("progress-text");
+    const progressBar = document.getElementById("progress-bar");
 
-// 5) Testi başlat
-function startQuiz() {
-  current = 0;
-  for (const type in scores) {
-    scores[type] = 0;
-  }
-  startScreen.hidden = true;
-  quizScreen.hidden = false;
-  showQuestion();
-}
+    // 5) Testi başlat
+    function startQuiz() {
+      current = 0;
+      for (const type in scores) {
+        scores[type] = 0;
+      }
+      startScreen.hidden = true;
+      resultScreen.hidden = true;
+      quizScreen.hidden = false;
+      showQuestion();
+    }
 
-// 6) Soruyu ve cevap butonlarını ekrana bas
-function showQuestion() {
-  const q = questions[current];
-  questionEl.textContent = q.text;
-  answersEl.innerHTML = "";
+    // 6) Soruyu ekrana bas
+    function showQuestion() {
+      const q = questions[current];
+      questionEl.textContent = q.text;
+      progressText.textContent = "Soru " + (current + 1) + " / " + questions.length;
+      progressBar.style.width = (current / questions.length * 100) + "%";
+      answersEl.innerHTML = "";
 
-  q.answers.forEach(function (answer) {
-    const btn = document.createElement("button");
-    btn.textContent = answer.text;
-    btn.addEventListener("click", function () {
-      chooseAnswer(answer.type);
+      // Cevapların sırasını her seferinde karıştır
+      const shuffled = q.answers.slice().sort(function () {
+        return Math.random() - 0.5;
+      });
+
+      shuffled.forEach(function (answer) {
+        const btn = document.createElement("button");
+        btn.className = "answer-btn";
+        btn.textContent = answer.text;
+        btn.addEventListener("click", function () {
+          chooseAnswer(answer.type);
+        });
+        answersEl.appendChild(btn);
+      });
+    }
+
+    // 7) Cevap seç
+    function chooseAnswer(type) {
+      scores[type]++;
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    // 8) Sonucu göster
+    function showResult() {
+      let winner = "bug";
+      for (const type in scores) {
+        if (scores[type] > scores[winner]) {
+          winner = type;
+        }
+      }
+
+      progressBar.style.width = "100%";
+      quizScreen.hidden = true;
+      resultScreen.hidden = false;
+
+      document.getElementById("result-emoji").textContent = results[winner].emoji;
+      document.getElementById("result-title").textContent = results[winner].title;
+      document.getElementById("result-text").textContent = results[winner].text;
+
+      // Yüzde çubukları
+      const barsEl = document.getElementById("result-bars");
+      barsEl.innerHTML = "";
+      for (const type in results) {
+        const percent = Math.round(scores[type] / questions.length * 100);
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        row.innerHTML =
+          '<div class="bar-label"><span>' + results[type].emoji + " " +
+          results[type].title + "</span><span>%" + percent + "</span></div>" +
+          '<div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>';
+        barsEl.appendChild(row);
+
+        // Çubuğun dolma animasyonu
+        const fill = row.querySelector(".bar-fill");
+        setTimeout(function () { fill.style.width = percent + "%"; }, 100);
+      }
+    }
+
+    // 9) Başlat butonu
+    document.getElementById("start-btn").addEventListener("click", startQuiz);
+
+    // 10) Tekrar çöz
+    document.getElementById("restart-btn").addEventListener("click", function () {
+      resultScreen.hidden = true;
+      startScreen.hidden = false;
     });
-    answersEl.appendChild(btn);
-  });
-}
 
-// 7) Cevap seçilince puan ver, sonraki soruya geç
-function chooseAnswer(type) {
-  scores[type]++;
-  current++;
-  if (current < questions.length) {
-    showQuestion();
-  } else {
-    showResult();
-  }
-}
+    // 11) Sonucu paylaş
+    document.getElementById("share-btn").addEventListener("click", async function () {
+      const emoji = document.getElementById("result-emoji").textContent;
+      const title = document.getElementById("result-title").textContent;
+      const shareData = {
+        title: "Hangi Yazılımcı Tipisin?",
+        text: "Ben " + emoji + " " + title + " çıktım! Sen hangisisin? (" + AUTHOR + ")",
+        url: window.location.href
+      };
 
-// 8) En yüksek puanlı tipi bul ve göster
-function showResult() {
-  let winner = "bug";
-  for (const type in scores) {
-    if (scores[type] > scores[winner]) {
-      winner = type;
-    }
-  }
-  quizScreen.hidden = true;
-  resultScreen.hidden = false;
-  document.getElementById("result-title").textContent = results[winner].title;
-  document.getElementById("result-text").textContent = results[winner].text;
-}
-
-// 9) Butona tıklayınca testi başlat
-document.getElementById("start-btn").addEventListener("click", startQuiz);
-
-// 10) Tekrar çöz
-document.getElementById("restart-btn").addEventListener("click", function () {
-  resultScreen.hidden = true;
-  startScreen.hidden = false;
-});
-
-// 11) Sonucu paylaş
-document.getElementById("share-btn").addEventListener("click", async function () {
-  const title = document.getElementById("result-title").textContent;
-  const shareData = {
-    title: "Hangi Yazılımcı Tipisin?",
-    text: "Ben " + title + " çıktım! Sen hangisisin?",
-    url: window.location.href
-  };
-
-  if (navigator.share) {
-    try {
-      await navigator.share(shareData);
-    } catch (err) {
-      // Kullanıcı paylaşmaktan vazgeçti, sorun yok
-    }
-  } else {
-    try {
-      await navigator.clipboard.writeText(shareData.text + " " + shareData.url);
-      alert("Metin ve link kopyalandı! Story'ne yapıştırabilirsin.");
-    } catch (err) {
-      alert("Linki elle kopyalayıp paylaşabilirsin.");
-    }
-  }
-});
-
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          // Kullanıcı vazgeçti
+        }
+      } else {
+        try {
+          await navigator.clipboard.writeText(shareData.text + " " + shareData.url);
+          alert("Metin ve link kopyalandı! Story'ne yapıştırabilirsin.");
+        } catch (err) {
+          alert("Linki elle kopyalayıp paylaşabilirsin.");
+        }
+      }
+    });
   </script>
 
 </body>
